@@ -4,14 +4,23 @@ nginx_conf_dir: /etc/nginx
 nginx_main_conf: nginx.conf
 nginx_conf_d: conf.d
 
-# List of site config templates to deploy (from templates/conf.d/)
+# Deploy these site templates from templates/conf.d/
 nginx_sites:
-  - default.conf.j2
-  - app.conf.j2
   - site1.conf.j2
   - site2.conf.j2
 
-# Vars used by example templates
-nginx_default_server_name: "_"
-nginx_app_server_name: "example.com"
-nginx_app_root: "/usr/share/nginx/html"
+# Shared TLS cert/key for both sites
+nginx_ssl_dir: /etc/nginx/ssl
+nginx_ssl_cert: "{{ nginx_ssl_dir }}/lab.crt"
+nginx_ssl_key:  "{{ nginx_ssl_dir }}/lab.key"
+
+# Self-signed generation (idempotent)
+nginx_generate_self_signed: true
+nginx_ssl_common_name: "site1.local"
+nginx_ssl_sans: "DNS:site1.local,DNS:site2.local"
+
+# DNS for upstream resolution
+nginx_resolver: "8.8.8.8 1.1.1.1"
+
+# JSON access log path
+nginx_json_log: /var/log/nginx/access_json.log

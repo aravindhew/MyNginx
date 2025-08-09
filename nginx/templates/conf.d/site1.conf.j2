@@ -1,14 +1,20 @@
+# Upstream: httpbin (HTTPS)
 upstream site1_upstream {
-    server httpbin.org:80;
+  server httpbin.org:443;
 }
 
 server {
-    listen 80;
-    server_name site1.local;
+  listen 443 ssl;
+  server_name site1.local;
 
-    location / {
-        proxy_pass http://site1_upstream;
-        proxy_set_header Host $proxy_host;        # was $host
-        proxy_set_header X-Real-IP $remote_addr;
-    }
+  ssl_certificate     {{ nginx_ssl_cert }};
+  ssl_certificate_key {{ nginx_ssl_key }};
+
+  location / {
+    proxy_pass https://site1_upstream;
+    proxy_set_header Host httpbin.org;    # ensure Host matches upstream for SNI/CDN
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_ssl_server_name on;
+    resolver {{ nginx_resolver }} valid=30s ipv6=off;
+  }
 }

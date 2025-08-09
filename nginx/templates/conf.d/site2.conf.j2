@@ -1,14 +1,20 @@
+# Upstream: jsonplaceholder (HTTPS)
 upstream site2_upstream {
-    server jsonplaceholder.typicode.com:80;
+  server jsonplaceholder.typicode.com:443;
 }
 
 server {
-    listen 80;
-    server_name site2.local;
+  listen 443 ssl;
+  server_name site2.local;
 
-    location / {
-        proxy_pass http://site2_upstream;
-        proxy_set_header Host $proxy_host;        # was $host
-        proxy_set_header X-Real-IP $remote_addr;
-    }
+  ssl_certificate     {{ nginx_ssl_cert }};
+  ssl_certificate_key {{ nginx_ssl_key }};
+
+  location / {
+    proxy_pass https://site2_upstream;
+    proxy_set_header Host jsonplaceholder.typicode.com;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_ssl_server_name on;
+    resolver {{ nginx_resolver }} valid=30s ipv6=off;
+  }
 }
