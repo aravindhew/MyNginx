@@ -8,6 +8,8 @@ nginx_conf_d: conf.d
 nginx_sites:
   - default.conf.j2
   - app.conf.j2
+  - site1.conf.j2
+  - site2.conf.j2
 
 # Vars used by example templates
 nginx_default_server_name: "_"
