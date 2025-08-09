@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: nginx
+  author: your_name
+  description: Manage NGINX with modular conf.d configs and safe reload
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: EL
+      versions: ["8","9"]
+    - name: Debian
+      versions: ["11","12"]
+    - name: Ubuntu
+      versions: ["20.04","22.04"]
+dependencies: []

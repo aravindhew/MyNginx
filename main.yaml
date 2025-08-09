@@ -1,0 +1,6 @@
+- name: Run nginx
+  hosts: all
+  become: true
+
+  roles:
+    - nginx

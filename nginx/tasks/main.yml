@@ -1,0 +1,38 @@
+---
+- name: Install nginx
+  ansible.builtin.package:
+    name: "{{ nginx_package }}"
+    state: present
+
+- name: Ensure conf.d directory exists
+  ansible.builtin.file:
+    path: "{{ nginx_conf_dir }}/{{ nginx_conf_d }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Deploy main nginx.conf
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_conf_dir }}/{{ nginx_main_conf }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: validate and reload nginx
+
+- name: Deploy site configs
+  ansible.builtin.template:
+    src: "conf.d/{{ item }}"
+    dest: "{{ nginx_conf_dir }}/{{ nginx_conf_d }}/{{ item | regex_replace('\\.j2$', '') }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ nginx_sites }}"
+  notify: validate and reload nginx
+
+- name: Ensure nginx is enabled and started
+  ansible.builtin.service:
+    name: "{{ nginx_service }}"
+    enabled: true
+    state: started

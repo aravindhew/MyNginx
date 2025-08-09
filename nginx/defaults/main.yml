@@ -1,0 +1,15 @@
+nginx_package: nginx
+nginx_service: nginx
+nginx_conf_dir: /etc/nginx
+nginx_main_conf: nginx.conf
+nginx_conf_d: conf.d
+
+# List of site config templates to deploy (from templates/conf.d/)
+nginx_sites:
+  - default.conf.j2
+  - app.conf.j2
+
+# Vars used by example templates
+nginx_default_server_name: "_"
+nginx_app_server_name: "example.com"
+nginx_app_root: "/usr/share/nginx/html"

@@ -1,0 +1,21 @@
+---
+- name: validate and reload nginx
+  listen: validate and reload nginx
+  block:
+    - name: Validate nginx configuration
+      ansible.builtin.command:
+        cmd: "nginx -t"
+      register: nginx_check
+      changed_when: false
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: "{{ nginx_service }}"
+        state: reloaded
+  rescue:
+    - name: Show nginx test output
+      ansible.builtin.debug:
+        var: nginx_check.stderr
+    - name: Fail if config invalid
+        # Use fail to stop the play if validation failed
+      ansible.builtin.fail:
+        msg: "nginx config validation failed."
