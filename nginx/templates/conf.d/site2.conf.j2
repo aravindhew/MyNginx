@@ -1,6 +1,6 @@
-# Upstream: jsonplaceholder (HTTPS)
+# Upstream: nginx.org (HTTPS)
 upstream site2_upstream {
-  server jsonplaceholder.typicode.com:443;
+  server nginx.org:443;
 }
 
 server {
@@ -12,7 +12,7 @@ server {
 
   location / {
     proxy_pass https://site2_upstream;
-    proxy_set_header Host jsonplaceholder.typicode.com;
+    proxy_set_header Host nginx.org;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_ssl_server_name on;
     resolver {{ nginx_resolver }} valid=30s ipv6=off;
